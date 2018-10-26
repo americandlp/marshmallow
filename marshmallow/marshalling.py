@@ -97,6 +97,7 @@ class Marshaller(ErrorStore):
         .. versionchanged:: 1.0.0
             Renamed from ``marshal``.
         """
+        index = index if index_errors else None
         if many and obj is not None:
             self._pending = True
             ret = [
@@ -124,7 +125,7 @@ class Marshaller(ErrorStore):
                 getter_func=getter,
                 data=obj,
                 field_name=key,
-                index=(index if index_errors else None),
+                index=index,
             )
             if value is missing:
                 continue
@@ -183,6 +184,7 @@ class Unmarshaller(ErrorStore):
             serializing a collection, otherwise `None`.
         :return: A dictionary of the deserialized data.
         """
+        index = index if index_errors else None
         if many:
             if not is_collection(data):
                 self.store_error(['Invalid input type.'], index=index)
@@ -239,7 +241,7 @@ class Unmarshaller(ErrorStore):
                     getter_func=getter,
                     data=raw_value,
                     field_name=field_name,
-                    index=(index if index_errors else None),
+                    index=index,
                 )
                 if value is not missing:
                     key = fields_dict[attr_name].attribute or attr_name
